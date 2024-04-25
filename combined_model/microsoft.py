@@ -25,18 +25,26 @@ def combine_predictions(ma_prediction, volume_prediction, sentiment_prediction):
     volume_prediction = volume_prediction[:50]
     sentiment_prediction = sentiment_prediction[:50]
     ma_prediction = ma_prediction[:50]
+    
+    # Adjust weight of the sentiment prediction
+    sentiment_weight = 0.05
 
-
-    # Calculate inverse of mean squared error for each model as a proxy for performance
+    # Calculate inverse of mean squared error for moving averages and trading volumes
     ma_error = 1 / np.mean((ma_prediction) ** 2)
     volume_error = 1 / np.mean((volume_prediction) ** 2)
-    sentiment_error = 1 / np.mean((sentiment_prediction) ** 2)
 
-    # Normalize errors to get weights
-    total_error = ma_error + volume_error + sentiment_error
-    ma_weight = ma_error / total_error
-    volume_weight = volume_error / total_error
-    sentiment_weight = sentiment_error / total_error
+    # Calculate weights for moving averages and trading volumes
+    total_ma_volume_error = ma_error + volume_error
+    ma_weight = ma_error / total_ma_volume_error
+    volume_weight = volume_error / total_ma_volume_error
+
+    # Calculate combined weight for all models
+    total_weight = ma_weight + volume_weight + sentiment_weight
+
+    # Normalize weights to ensure they sum up to 1
+    ma_weight /= total_weight
+    volume_weight /= total_weight
+    sentiment_weight /= total_weight
 
     best_weights = [ma_weight, volume_weight, sentiment_weight]
 
