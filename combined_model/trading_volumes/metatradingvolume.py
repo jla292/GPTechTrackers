@@ -295,5 +295,10 @@ def main(patience=3):
     # Plot predicted vs. actual values with dates (2023 and 2024)
     plot_predictions_with_dates(predicted_values[:, 0], actual_values_scaled[:, 0], dates_2024, historical_dates_2023, historical_prices_2023, actual_dates_2024, actual_prices_2024)
 
+    return predicted_values
+
+def get_predictions():
+    return main()
+
 if __name__ == "__main__":
     main()
