@@ -64,7 +64,7 @@ def load_data(file_path):
     df = pd.read_csv(file_path)
 
     # Feature selection (stock price and trading volume)
-    selected_features = ['Date', 'Close', 'Volume']
+    selected_features = ['Date', 'Adj Close', 'Volume']
     df = df[selected_features]
 
     # Convert 'Date' column to datetime
@@ -72,8 +72,8 @@ def load_data(file_path):
 
     # Normalize the data
     scaler = MinMaxScaler()
-    df_scaled = scaler.fit_transform(df[['Close']])  # Only fit scaler to closing prices
-    df[['Close']] = df_scaled  # Update DataFrame with scaled closing prices
+    df_scaled = scaler.fit_transform(df[['Adj Close']])  # Only fit scaler to closing prices
+    df[['Adj Close']] = df_scaled  # Update DataFrame with scaled closing prices
 
     return df, scaler
 
@@ -283,17 +283,22 @@ def main(patience=3):
 
     # Get historical dates and prices for 2023
     historical_dates_2023 = train_df['Date']
-    historical_prices_2023 = scaler.inverse_transform(train_df[['Close']])
+    historical_prices_2023 = scaler.inverse_transform(train_df[['Adj Close']])
 
     # Get dates for predicted values (first three months of 2024)
     dates_2024 = test_df['Date'][-len(predicted_values):]
 
     # Get actual dates and prices for 2024
     actual_dates_2024 = test_df['Date']
-    actual_prices_2024 = scaler.inverse_transform(test_df[['Close']])
+    actual_prices_2024 = scaler.inverse_transform(test_df[['Adj Close']])
 
     # Plot predicted vs. actual values with dates (2023 and 2024)
     plot_predictions_with_dates(predicted_values[:, 0], actual_values_scaled[:, 0], dates_2024, historical_dates_2023, historical_prices_2023, actual_dates_2024, actual_prices_2024)
+
+    return predicted_values
+
+def get_predictions():
+    return main()
 
 if __name__ == "__main__":
     main()
