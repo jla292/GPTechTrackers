@@ -3,8 +3,8 @@
 
 # Import necessary functions from other modules
 from market_sentiment.nvidiamarketsentiment import predictions as sentiment_prediction
-from moving_averages.nvda_moving_averages import y_pred as ma_prediction
-from trading_volumes.nvidiatradingvolume import get_predictions as get_volume_prediction
+from moving_averages.nvda_moving_averages import predictions as ma_prediction
+from trading_volumes.nvidia_trading_volume import get_predictions as get_volume_prediction
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -94,10 +94,7 @@ def main():
     # Generate time series for the first 50 days of 2024
     time_series = nvda_data_2024['Date'].values
 
-    # Calculate the average prediction along the columns axis
-    average_prediction = np.mean(combined_prediction, axis=1)
-
-    mape = calculate_mape(actual_prices, average_prediction)
+    mape = calculate_mape(actual_prices, combined_prediction)
 
     # Print the results
     print("Best weights:", best_weights)
@@ -107,7 +104,7 @@ def main():
     # Plot actual vs predicted stock prices
     plt.figure(figsize=(10, 6))
     plt.plot(time_series, actual_prices, label='Actual Prices', color='blue')
-    plt.plot(time_series, average_prediction, label='Predicted Prices', color='red')
+    plt.plot(time_series, combined_prediction, label='Predicted Prices', color='red')
     # plt.plot(time_series, ma_prediction[:len(actual_prices)], label='Moving Averages Predictions', color='green')
     # plt.plot(time_series, sentiment_prediction[:len(actual_prices)], label='Market Sentiment Predictions', color='orange')
     # plt.plot(time_series, volume_prediction[:len(actual_prices)], label='Trading Volumes Predictions', color='purple')

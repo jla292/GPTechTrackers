@@ -2,8 +2,8 @@
 # goal: weighted average of all three predictions 
 
 # Import necessary functions from other modules
-from moving_averages.meta_moving_averages import y_pred as ma_prediction
-from trading_volumes.metatradingvolume import get_predictions as get_volume_prediction
+from moving_averages.meta_moving_averages import predictions as ma_prediction
+from trading_volumes.meta_trading_volume import get_predictions as get_volume_prediction
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -81,9 +81,9 @@ def main():
     time_series = meta_data_2024['Date'].values
 
     # Calculate the average prediction along the columns axis
-    average_prediction = np.mean(combined_prediction, axis=1)
+    # average_prediction = np.mean(combined_prediction)
 
-    mape = calculate_mape(actual_prices, average_prediction)
+    mape = calculate_mape(actual_prices, combined_prediction)
 
     # Print the results
     print("Best weights:", best_weights)
@@ -93,7 +93,7 @@ def main():
     # Plot actual vs predicted stock prices
     plt.figure(figsize=(10, 6))
     plt.plot(time_series, actual_prices, label='Actual Prices', color='blue')
-    plt.plot(time_series, average_prediction, label='Predicted Prices', color='red')
+    plt.plot(time_series, combined_prediction, label='Predicted Prices', color='red')
 
     plt.xlabel('Time')
     plt.ylabel('Stock Price')
